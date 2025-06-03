@@ -3,7 +3,7 @@ import { MdClose, MdMenu } from "react-icons/md";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Navbar from "./Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const [active, setActive] = useState(false);
@@ -12,8 +12,29 @@ const Header = () => {
     setMenuOpened(!menuOpened);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.screenY > 0) {
+        if (menuOpened) {
+          setMenuOpened(false);
+        }
+      }
+      setActive(window.scrollY > 30);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [menuOpened]);
+
   return (
-    <header className="py-2 max-padd-container fixed top-0 w-full left-0 right-0 z-50 transition-all duration-200 ">
+    <header
+      className={`py-2 max-padd-container fixed top-0 w-full left-0 right-0 z-50 transition-all duration-200 ${
+        active ? "py-1 bg-white shadow-md" : "py-2"
+      }`}
+    >
       {/* container */}
 
       <div className="flexBetween">
