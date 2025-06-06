@@ -7,8 +7,8 @@ import { FaStar } from "react-icons/fa6";
 
 const Hero = () => {
   return (
-    <section className="max-pdd-container bg-hero bg-cover bg-no-repeat h-[722px] w-full">
-      <div className=" relative top-32 xs:top-48">
+    <section className="max-padd-container bg-hero bg-cover bg-no-repeat h-[722px] w-full">
+      <div className=" relative top-32 xs:top-48 ">
         <h1 className="h1 capitalize max-w-[41rem]">
           Discover Your Dream Property Today
         </h1>
