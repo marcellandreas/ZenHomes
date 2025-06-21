@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ujian Online</title>
+</head>
+<body>
+  <h1>Soal Ujian</h1>
+  <p>1. Apa ibu kota Indonesia?</p>
+  <input type="text" id="jawaban" placeholder="Jawaban...">
+  <p id="peringatan"></p>
+  <p id="statusUjian" style="color: red; font-weight: bold;"></p>
+
+  <script>
+    let peringatanCount = 0;
+    const batasPeringatan = 3;
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        peringatanCount++;
+
+        if (peringatanCount <= batasPeringatan) {
+          alert(`Peringatan ${peringatanCount}: Dilarang membuka tab lain saat ujian!`);
+          document.getElementById("peringatan").innerText =
+            `Kamu sudah mendapat ${peringatanCount} peringatan dari maksimal ${batasPeringatan}`;
+        }
+
+        if (peringatanCount === batasPeringatan) {
+          // Ujian dianggap selesai
+          document.getElementById("jawaban").readOnly = true;
+          document.getElementById("statusUjian").innerText =
+            "Ujian telah dihentikan karena melanggar aturan.";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
