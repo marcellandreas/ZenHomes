@@ -1,25 +1,52 @@
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "react-router-dom";
-import { getProperty } from "../utils/api";
-import { PuffLoader } from "react-spinners";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Button } from "@mantine/core";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useContext, useState } from "react";
+import { CgRuler } from "react-icons/cg";
 import { FaHeart, FaLocationDot, FaStar } from "react-icons/fa6";
 import {
   MdOutlineBathroom,
   MdOutlineBed,
   MdOutlineGarage,
 } from "react-icons/md";
-import { CgRuler } from "react-icons/cg";
+import { useLocation } from "react-router-dom";
+import { PuffLoader } from "react-spinners";
+import { toast } from "react-toastify";
+import BookingModal from "../components/BookingModal";
 import Map from "../components/Map";
+import UserDetailContext from "../context/userDetailContext";
+import useAuthCheck from "../hooks/useAuthCheck";
+import { getProperty, removeBooking } from "../utils/api";
 
 const Property = () => {
+  const [modalOpened, setModalOpened] = useState(false);
+  const { validateLogin } = useAuthCheck();
   const { pathname } = useLocation();
+  const { user } = useAuth0();
   const id = pathname.split("/").slice(-1)[0];
 
   const { data, isError, isLoading } = useQuery({
     queryKey: ["resd", id],
     queryFn: () => getProperty(id),
   });
+
+  const { mutate: cancelBooking, isLoading: canceling } = useMutation({
+    mutationFn: () => removeBooking(id, user?.email, token),
+    onSuccess: () => {
+      setUserDetails((prev) => ({
+        ...prev,
+        bookings: prev.bookings.filter((booking) => booking?.id !== id),
+      }));
+      toast.success("Booking cancelled", { position: "bottom-right" });
+    },
+  });
+
+  const {
+    userDetails: { token, bookings },
+    setUserDetails,
+  } = useContext(UserDetailContext);
+
+  console.log("userDetails", bookings);
 
   if (isLoading) {
     return (
@@ -98,7 +125,40 @@ const Property = () => {
           <h4 className=" h4 mt-3">Property Details</h4>
           <p className="mb-4">{data?.description}</p>
           <div className="flexBetween pt-7">
-            <button className=" btn-dark">book visit</button>
+            {bookings?.map((booking) => booking.id).includes(id) ? (
+              <>
+                <Button
+                  variant="outline"
+                  color="red"
+                  w={"100%"}
+                  onClick={() => cancelBooking()}
+                  disabled={canceling}
+                >
+                  Cancel Booking
+                </Button>
+                <p className="text-red-500 medium-15 ml-3">
+                  You've already Booked visit for{" "}
+                  {bookings?.filter((booking) => booking?.id === id)[0].date}
+                </p>
+              </>
+            ) : (
+              <Button
+                onClick={() => {
+                  validateLogin() && setModalOpened(true);
+                }}
+                variant="filled"
+                w={"50%"}
+                color="black"
+              >
+                Book visit
+              </Button>
+            )}
+            <BookingModal
+              opened={modalOpened}
+              setOpened={setModalOpened}
+              propertyId={id}
+              email={user?.email}
+            />
           </div>
         </div>
         {/* rigth side */}
