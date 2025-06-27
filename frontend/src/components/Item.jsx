@@ -6,12 +6,15 @@ import {
   MdOutlineGarage,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import HeartBtn from "./HeartBtn";
 
 const Item = ({ property }) => {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
-    <div onClick={() => navigate(`../listing/${property.id}`)} className=" rounded-lg overflow-hidden bg-white ring-1 ring-slate-900/50">
+    <div
+      onClick={() => navigate(`../listing/${property.id}`)}
+      className=" rounded-lg overflow-hidden bg-white ring-1 ring-slate-900/50"
+    >
       {/* image */}
       <div className="relative">
         <img
@@ -20,7 +23,7 @@ const Item = ({ property }) => {
           className="h-[13rem] w-full aspect-square object-cover"
         />
         <div className=" absolute top-4 right-6">
-          <FaHeart className=" text-white text-xl" />
+          <HeartBtn id={property.id} />
         </div>
       </div>
       {/* info */}

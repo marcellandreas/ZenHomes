@@ -41,7 +41,6 @@ export const getProperty = async (id) => {
 };
 
 export const createUser = async (email, token) => {
-  console.log(token, "a");
   try {
     await api.post(
       "/user/register",
@@ -54,7 +53,6 @@ export const createUser = async (email, token) => {
     );
   } catch (error) {
     toast.error("Something went wrong, Please try again");
-    console.error("Create user error", error.response?.data || error.message);
     throw error;
   }
 };
@@ -94,5 +92,61 @@ export const removeBooking = async (id, email, token) => {
   } catch (error) {
     toast.error("Something went wrong, Try again please");
     throw error;
+  }
+};
+export const toFav = async (id, email, token) => {
+  try {
+    await api.post(
+      `/user/toFav/${id}`,
+      { email },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const getAllFav = async (email, token) => {
+  if (!token) return;
+  //localhost:4000/api/user/allFav
+  try {
+    const res = await api.post(
+      `/user/allFav/`,
+      { email },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return res.data["favResidenciesID"];
+  } catch (e) {
+    toast.error("Something went wrong while fecthing your fav list");
+    throw e;
+  }
+};
+
+export const getAllBookings = async (email, token) => {
+  if (!token) return;
+  try {
+    const res = await api.post(
+      `/user/allBookings/`,
+      { email },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return res.data["bookedVisits"];
+  } catch (e) {
+    toast.error("Something went wrong while fecthing your bookings list");
+    throw e;
   }
 };

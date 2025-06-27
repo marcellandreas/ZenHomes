@@ -3,7 +3,7 @@ import { Button } from "@mantine/core";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
 import { CgRuler } from "react-icons/cg";
-import { FaHeart, FaLocationDot, FaStar } from "react-icons/fa6";
+import { FaLocationDot, FaStar } from "react-icons/fa6";
 import {
   MdOutlineBathroom,
   MdOutlineBed,
@@ -13,6 +13,7 @@ import { useLocation } from "react-router-dom";
 import { PuffLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import BookingModal from "../components/BookingModal";
+import HeartBtn from "../components/HeartBtn";
 import Map from "../components/Map";
 import UserDetailContext from "../context/userDetailContext";
 import useAuthCheck from "../hooks/useAuthCheck";
@@ -30,6 +31,12 @@ const Property = () => {
     queryFn: () => getProperty(id),
   });
 
+  // mengambil token dan bookings yang ada di context
+  const {
+    userDetails: { token, bookings },
+    setUserDetails,
+  } = useContext(UserDetailContext);
+
   const { mutate: cancelBooking, isLoading: canceling } = useMutation({
     mutationFn: () => removeBooking(id, user?.email, token),
     onSuccess: () => {
@@ -37,16 +44,10 @@ const Property = () => {
         ...prev,
         bookings: prev.bookings.filter((booking) => booking?.id !== id),
       }));
+      queryClient.invalidateQueries(["bookings"]);
       toast.success("Booking cancelled", { position: "bottom-right" });
     },
   });
-
-  const {
-    userDetails: { token, bookings },
-    setUserDetails,
-  } = useContext(UserDetailContext);
-
-  console.log("userDetails", bookings);
 
   if (isLoading) {
     return (
@@ -80,7 +81,7 @@ const Property = () => {
         />
         {/* like btn */}
         <div className=" absolute top-8 right-8">
-          <FaHeart className="text-white text-xl" />
+          <HeartBtn id={id} />
         </div>
       </div>
       {/* container */}
@@ -125,7 +126,7 @@ const Property = () => {
           <h4 className=" h4 mt-3">Property Details</h4>
           <p className="mb-4">{data?.description}</p>
           <div className="flexBetween pt-7">
-            {bookings?.map((booking) => booking.id).includes(id) ? (
+            {bookings?.some((booking) => booking?.id === id) ? (
               <>
                 <Button
                   variant="outline"

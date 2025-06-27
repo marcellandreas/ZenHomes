@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Home from "./pages/home";
 
 import Layout from "./components/Layout";
@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "react-toastify/dist/ReactToastify.css";
 import UserDetailContext from "./context/userDetailContext";
+import useBookings from "./hooks/useBookings";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => {
     bookings: [],
     token: null,
   });
+
   return (
     <UserDetailContext.Provider value={{ userDetails, setUserDetails }}>
       <QueryClientProvider client={queryClient}>
