@@ -9,3 +9,10 @@ export const updateFavourite = (id, favourites) => {
 export const checkFavourites = (id, favourites) => {
   return favourites?.includes(id) ? "#8ac243" : "white";
 };
+
+// membuat validate untuk form county, city dan address
+export const validateString = (value) => {
+  return value?.length < 3 || value === null
+    ? "Must have atleast 3 characters"
+    : null;
+};
