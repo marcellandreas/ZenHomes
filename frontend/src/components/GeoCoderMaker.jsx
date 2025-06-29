@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Marker, Popup, useMap } from "react-leaflet";
+import { Marker, Popup } from "react-leaflet";
+import { useMap } from "react-leaflet/hooks";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -22,7 +23,7 @@ const GeoCoderMaker = ({ address }) => {
       .text(address)
       .run((err, results, response) => {
         if (results?.results?.length > 0) {
-          const { lat, lng } = results?.results[0].lating;
+          const { lat, lng } = results?.results[0].latlng;
           setPosition([lat, lng]);
           map.flyTo([lat, lng], 8);
         }
