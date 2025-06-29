@@ -1,7 +1,6 @@
-import { latLng } from "leaflet";
-import React from "react";
 import countries from "world-countries";
 
+// mencari negara
 const formattedCountries = countries.map((country) => ({
   value: country.name.common,
   label: `${country.name.common} ${country.flag}`,
