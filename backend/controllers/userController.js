@@ -3,8 +3,6 @@ import { prisma } from "../config/prismaConfig.js";
 
 // controller function for creating a user
 export const createUser = asyncHandler(async (req, res) => {
-  console.log("Creating a user");
-
   let { email } = req.body;
   const userExists = await prisma.user.findUnique({ where: { email } });
 
