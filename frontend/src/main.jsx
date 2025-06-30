@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")).render(
     domain="dev-g3n723l50j4udb27.jp.auth0.com"
     clientId="vUhNBQefVTgkJ6vl9lSLsXObmJZXbaqe"
     authorizationParams={{
-      redirect_uri: "http://localhost:5173",
+      redirect_uri: "https://zenhomes-blond.vercel.app",
     }}
     audience="http://localhost:4000"
     scope="openid profile email"
