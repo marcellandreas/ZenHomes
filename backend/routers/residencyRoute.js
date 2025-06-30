@@ -4,10 +4,11 @@ import {
   getAllResidencies,
   getRecidency,
 } from "../controllers/RecidencyController.js";
+import jwtCheck from "../config/auth0config.js";
 
 const router = express.Router();
 
-router.post("/create", createRecidency);
+router.post("/create", jwtCheck, createRecidency);
 router.get("/allresd", getAllResidencies);
 router.get("/:id", getRecidency);
 
